@@ -11,6 +11,8 @@ public class PlayerControl : MonoBehaviour
     //private const string PLAYER_WALK_BACKWARD_STATE = "WalkBackward";
     #endregion
 
+    [SerializeField] private bool _isRunning = false;
+
     public PlayerAnimationConrtol playerAnimationConrtol;
 
     //[SerializeField] private float _walkSpeed = 1f;
@@ -30,22 +32,40 @@ public class PlayerControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-        
-        if (Input.GetKeyDown(KeyCode.LeftShift) && (Input.GetKeyDown(KeyCode.W)))
+        CheckingIsRunningState();
+        //if (Input.GetKeyDown(KeyCode.LeftShift)) _isRunning = true;
+        //else _isRunning = false;
+
+        //Если состояния игрока "бег"
+        if(_isRunning)
         {
-            //если нажата клавиша W + Shift, проигрывание анимации Player_RunForward
-            playerAnimationConrtol.ChangeState(PLAYER_RUN_FORWARD_STATE);
+
+            //если нажата клавиша W, проигрывание анимации Player_RunForward
+            if (Input.GetKey(KeyCode.W)) playerAnimationConrtol.ChangeState(PLAYER_RUN_FORWARD_STATE);
         }
+        else
+        {
+            //если нажата клавиша W, проигрывание анимации Player_WalkForward
+            if (Input.GetKey(KeyCode.W)) playerAnimationConrtol.ChangeState(PLAYER_WALK_FORWARD_STATE);
+
+        }
+
+        //if (Input.GetKey(KeyCode.LeftShift))
+        //{
+        //    //если нажата только одна клавиша "режим бега", проигрывание анимации IDLE
+        //    playerAnimationConrtol.ChangeState(PLAYER_IDLE_STATE);
+        //}
 
         //если не нажата ни одна клавиша, проигрывание анимации IDLE
         if (Input.anyKey == false) playerAnimationConrtol.ChangeState(PLAYER_IDLE_STATE);
-        //если нажата клавиша W, проигрывание анимации Player_WalkForward
-        if (Input.GetKeyDown(KeyCode.W)) playerAnimationConrtol.ChangeState(PLAYER_WALK_FORWARD_STATE);
+    }
 
-       
-
-        
-
+    /// <summary>
+    /// Проверка на состояние бега
+    /// </summary>
+    private void CheckingIsRunningState()
+    {
+        if (Input.GetKey(KeyCode.LeftShift)) _isRunning = true;
+        else _isRunning = false;
     }
 }
