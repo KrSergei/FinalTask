@@ -353,7 +353,7 @@ MonoBehaviour:
   _isRunning: 0
   playerAnimationConrtol: {fileID: 0}
   _walkSpeed: 1
-  _runSpeed: 4
+  _runSpeed: 3.5
   _directionToMove: {x: 0, y: 0, z: 0}
   _directionSide: 0
   _directionForward: 0

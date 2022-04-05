@@ -46,69 +46,98 @@ public class PlayerControl : MonoBehaviour
     {
         _directionSide = Input.GetAxisRaw("Horizontal");
         _directionForward = Input.GetAxisRaw("Vertical");
-        if (CheckingIsRunningState())
+        //if (CheckingIsRunningState())
+        //{
+        //    ////если нажата клавиша W, проигрывание анимации Player_RunForward
+        //    if (_directionForward > 0)
+        //    {
+        //        playerAnimationConrtol.ChangeAnimationByParametr(PLAYER_RUN_FORWARD_PARAMETR);
+        //        _directionToMove = Vector3.forward * _runSpeed;
+        //    }
+        //    //если нажата клавиша S, проигрывание анимации Player_RunBackward
+        //    if (_directionForward < 0)
+        //    {
+        //        playerAnimationConrtol.ChangeAnimationByParametr(PLAYER_RUN_BACKWARD_PARAMETR);
+        //        _directionToMove = -Vector3.forward * _runSpeed;
+        //    }
+        //    //если нажата клавиша D, проигрывание анимации Player_RunRight
+        //    if (_directionSide > 0)
+        //    {
+        //        playerAnimationConrtol.ChangeAnimationByParametr(PLAYER_RUN_RIGHT_PARAMETR);
+        //        _directionToMove = Vector3.right * _runSpeed;
+        //    }
+        //    //если нажата клавиша A, проигрывание анимации Player_RunLeft
+        //    if (_directionSide < 0)
+        //    {
+        //        playerAnimationConrtol.ChangeAnimationByParametr(PLAYER_RUN_LEFT_PARAMETR);
+        //        _directionToMove = -Vector3.right * _runSpeed;
+        //    }
+        //    //расчет вектора движения
+        //    _directionToMove *= Time.deltaTime;
+        //}
+        //else
+        //{
+        //    //если нажата клавиша W, проигрывание анимации Player_WalkForward
+        //    if (_directionForward > 0)
+        //    {
+        //        playerAnimationConrtol.ChangeAnimationByParametr(PLAYER_WALK_FORWARD_PARAMETR);
+        //        _directionToMove = Vector3.forward * _walkSpeed;
+        //    }
+        //    //если нажата клавиша S, проигрывание анимации Player_WalkBackward
+        //    if (_directionForward < 0)
+        //    {
+        //        playerAnimationConrtol.ChangeAnimationByParametr(PLAYER_WALK_BACKWARD_PARAMETR);
+        //        _directionToMove = -Vector3.forward * _walkSpeed;
+        //    }
+        //    //если нажата клавиша D, проигрывание анимации Player_WalkRight
+        //    if (_directionSide > 0)
+        //    {
+        //        playerAnimationConrtol.ChangeAnimationByParametr(PLAYER_WALK_RIGHT_PARAMETR);
+        //        _directionToMove = Vector3.right * _walkSpeed;
+        //    }
+        //    //если нажата клавиша A, проигрывание анимации Player_WalkLeft
+        //    if (_directionSide < 0)
+        //    {
+        //        playerAnimationConrtol.ChangeAnimationByParametr(PLAYER_WALK_LEFT_PARAMETR);
+        //        _directionToMove = -Vector3.right * _walkSpeed;
+        //    }
+        ////расчет вектора движения
+        //_directionToMove *= Time.deltaTime;
+        //}
+
+        #region var2
+        if (_directionForward != 0 || _directionSide != 0)
         {
-            ////если нажата клавиша W, проигрывание анимации Player_RunForward
-            if (_directionForward > 0)
-            {
-                playerAnimationConrtol.ChangeAnimationByParametr(PLAYER_RUN_FORWARD_PARAMETR);
-                _directionToMove = Vector3.forward * _runSpeed;
-            }
-            //если нажата клавиша S, проигрывание анимации Player_RunBackward
-            if (_directionForward < 0)
-            {
-                playerAnimationConrtol.ChangeAnimationByParametr(PLAYER_RUN_BACKWARD_PARAMETR);
-                _directionToMove = -Vector3.forward * _runSpeed;
-            }
-            //если нажата клавиша D, проигрывание анимации Player_RunRight
-            if (_directionSide > 0)
-            {
-                playerAnimationConrtol.ChangeAnimationByParametr(PLAYER_RUN_RIGHT_PARAMETR);
-                _directionToMove = Vector3.right * _runSpeed;
-            }
-            //если нажата клавиша A, проигрывание анимации Player_RunLeft
-            if (_directionSide < 0)
-            {
-                playerAnimationConrtol.ChangeAnimationByParametr(PLAYER_RUN_LEFT_PARAMETR);
-                _directionToMove = -Vector3.right * _runSpeed;
-            }
-            //расчет вектора движения
-            _directionToMove *= Time.deltaTime;
+            //playerAnimationConrtol.ChangeAnimationByParametr(PLAYER_WALK_FORWARD_PARAMETR);
+            playerAnimationConrtol.SetFloatValueDirection("Forward", _directionForward * CheckingIsRunningState());
+            playerAnimationConrtol.SetFloatValueDirection("Side", _directionSide * CheckingIsRunningState());
+
+            //Вычисление результирующего вектора движения
+            _directionToMove = (((Vector3.forward * _directionForward)
+                + ((Vector3.right * _directionSide))).normalized) 
+                * CheckingIsRunningState() * Time.deltaTime;
         }
         else
         {
-            //если нажата клавиша W, проигрывание анимации Player_WalkForward
-            if (_directionForward > 0)
-            {
-                playerAnimationConrtol.ChangeAnimationByParametr(PLAYER_WALK_FORWARD_PARAMETR);
-                _directionToMove = Vector3.forward * _walkSpeed;
-            }
-            //если нажата клавиша S, проигрывание анимации Player_WalkBackward
-            if (_directionForward < 0)
-            {
-                playerAnimationConrtol.ChangeAnimationByParametr(PLAYER_WALK_BACKWARD_PARAMETR);
-                _directionToMove = -Vector3.forward * _walkSpeed;
-            }
-            //если нажата клавиша D, проигрывание анимации Player_WalkRight
-            if (_directionSide > 0)
-            {
-                playerAnimationConrtol.ChangeAnimationByParametr(PLAYER_WALK_RIGHT_PARAMETR);
-                _directionToMove = Vector3.right * _walkSpeed;
-            }
-            //если нажата клавиша A, проигрывание анимации Player_WalkLeft
-            if (_directionSide < 0)
-            {
-                playerAnimationConrtol.ChangeAnimationByParametr(PLAYER_WALK_LEFT_PARAMETR);
-                _directionToMove = -Vector3.right * _walkSpeed;
-            }
-        //расчет вектора движения
-        _directionToMove *= Time.deltaTime;
+            playerAnimationConrtol.SetFloatValueDirection("Forward", _directionForward);
+            playerAnimationConrtol.SetFloatValueDirection("Side", _directionSide);
+            //playerAnimationConrtol.ChangeAnimationByParametr(PLAYER_IDLE_PARAMETR);
+            _directionToMove = Vector3.zero;
         }
+        #endregion
+        //if (_directionSide != 0)
+        //{
+        //    //playerAnimationConrtol.ChangeAnimationByParametr(PLAYER_WALK_FORWARD_PARAMETR);
+
+        //    _directionToMove = Vector3.right * _directionSide;
+        //}
+
         //если скорость персонажа равна 0, проигрывание анимации IDLE
-        if (_directionForward == 0 && _directionSide == 0)
-        {
-            playerAnimationConrtol.ChangeAnimationByParametr(PLAYER_IDLE_PARAMETR);
-        }
+        //if (_directionForward == 0 && _directionSide == 0)
+        //{
+
+        //}
+        //Vector3 resultDirection = 
         StartCoroutine(Move(_directionToMove));
     }
 
@@ -116,9 +145,9 @@ public class PlayerControl : MonoBehaviour
     /// <summary>
     /// Проверка на состояние бега, если нажата кнопка LeftShift, то включен режим шага.
     /// </summary>
-    private bool CheckingIsRunningState()
+    private float CheckingIsRunningState()
     {
-        return (Input.GetKey(KeyCode.LeftShift)) ? false : true;
+        return (Input.GetKey(KeyCode.LeftShift)) ? _runSpeed : _walkSpeed;
     }
 
     IEnumerator Move(Vector3 newDirection)

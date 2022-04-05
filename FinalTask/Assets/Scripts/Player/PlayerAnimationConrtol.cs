@@ -31,12 +31,9 @@ public class PlayerAnimationConrtol : MonoBehaviour
         _currentKeyName = newParametr;
         Debug.Log("_currentParametr = " + _currentKeyName);
     }
-    public void ChangeAnimationByBoolParametr(string newParametr, bool state)
-    {
-        if (_currentKeyName == newParametr) return;
 
-        _currentKeyName = newParametr;
-        _anim.SetBool(newParametr, state);
-        Debug.Log("_currentKeyName = " + _currentKeyName);
+    public void SetFloatValueDirection(string newParamentr, float newValue)
+    {
+        _anim.SetFloat(newParamentr, newValue);
     }
 }
