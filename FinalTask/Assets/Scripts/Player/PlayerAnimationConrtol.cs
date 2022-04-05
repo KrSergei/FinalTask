@@ -10,6 +10,7 @@ public class PlayerAnimationConrtol : MonoBehaviour
     void Start()
     {
         _anim = GetComponent<Animator>();
+        _currentKeyName = "IDLE";
     }
 
     /// <summary>
@@ -26,13 +27,14 @@ public class PlayerAnimationConrtol : MonoBehaviour
     public void ChangeAnimationByParametr(string newParametr)
     {
         if (_currentKeyName.Equals(newParametr)) return;
-        _currentKeyName = newParametr;
         _anim.SetTrigger(newParametr);
+        _currentKeyName = newParametr;
         Debug.Log("_currentParametr = " + _currentKeyName);
     }
     public void ChangeAnimationByBoolParametr(string newParametr, bool state)
     {
         if (_currentKeyName == newParametr) return;
+
         _currentKeyName = newParametr;
         _anim.SetBool(newParametr, state);
         Debug.Log("_currentKeyName = " + _currentKeyName);
