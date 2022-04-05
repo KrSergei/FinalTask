@@ -44,7 +44,6 @@ public class PlayerControl : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        CheckingIsRunningState();
         _directionSide = Input.GetAxisRaw("Horizontal");
         _directionForward = Input.GetAxisRaw("Vertical");
         if (CheckingIsRunningState())
