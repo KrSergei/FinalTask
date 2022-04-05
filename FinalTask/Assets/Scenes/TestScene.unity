@@ -337,6 +337,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _currentState: 
+  _currentKeyName: 
 --- !u!114 &908452221
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -349,9 +350,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb4beacb7c6fcc948b29436051b877fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isRunning: 0
   playerAnimationConrtol: {fileID: 0}
   _walkSpeed: 1
-  _runSpeed: 2
+  _runSpeed: 4
+  _directionToMove: {x: 0, y: 0, z: 0}
+  _directionSide: 0
+  _directionForward: 0
 --- !u!1 &1051376380
 GameObject:
   m_ObjectHideFlags: 0

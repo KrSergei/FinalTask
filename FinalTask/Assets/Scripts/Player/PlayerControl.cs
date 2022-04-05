@@ -12,10 +12,13 @@ public class PlayerControl : MonoBehaviour
 
     private const string PLAYER_IDLE_PARAMETR = "IDLE";
     private const string PLAYER_WALK_FORWARD_PARAMETR = "WalkForward";
-    private const string PLAYER_RUN_FORWARD_PARAMETR = "RunForward";
     private const string PLAYER_WALK_BACKWARD_PARAMETR = "WalkBackward";
     private const string PLAYER_WALK_LEFT_PARAMETR = "WalkLeft";
     private const string PLAYER_WALK_RIGHT_PARAMETR = "WalkRight";
+    private const string PLAYER_RUN_FORWARD_PARAMETR = "RunForward";
+    private const string PLAYER_RUN_BACKWARD_PARAMETR = "RunBackward";
+    private const string PLAYER_RUN_LEFT_PARAMETR = "RunLeft";
+    private const string PLAYER_RUN_RIGHT_PARAMETR = "RunRight";
     #endregion
 
     [SerializeField] private bool _isRunning = false;
@@ -23,7 +26,7 @@ public class PlayerControl : MonoBehaviour
     public PlayerAnimationConrtol playerAnimationConrtol;
 
     [SerializeField] private float _walkSpeed = 1f;
-    [SerializeField] private float _runSpeed = 2f;
+    [SerializeField] private float _runSpeed = 3f;
     [SerializeField] private Vector3 _directionToMove;
     [SerializeField] private float _directionSide;
     [SerializeField] private float _directionForward;
@@ -39,61 +42,84 @@ public class PlayerControl : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        //CheckingIsRunningState();
+        CheckingIsRunningState();
         _directionSide = Input.GetAxisRaw("Horizontal");
         _directionForward = Input.GetAxisRaw("Vertical");
-
-        //если нажата клавиша W, проигрывание анимации Player_WalkForward
-        if (_directionForward > 0)
+        if (CheckingIsRunningState())
         {
-            playerAnimationConrtol.ChangeAnimationByParametr(PLAYER_WALK_FORWARD_PARAMETR);
-            _directionToMove = Vector3.forward * _walkSpeed;
+            ////если нажата клавиша W, проигрывание анимации Player_RunForward
+            if (_directionForward > 0)
+            {
+                playerAnimationConrtol.ChangeAnimationByParametr(PLAYER_RUN_FORWARD_PARAMETR);
+                _directionToMove = Vector3.forward * _runSpeed;
+            }
+            //если нажата клавиша S, проигрывание анимации Player_RunBackward
+            if (_directionForward < 0)
+            {
+                playerAnimationConrtol.ChangeAnimationByParametr(PLAYER_RUN_BACKWARD_PARAMETR);
+                _directionToMove = -Vector3.forward * _runSpeed;
+            }
+            //если нажата клавиша D, проигрывание анимации Player_RunRight
+            if (_directionSide > 0)
+            {
+                playerAnimationConrtol.ChangeAnimationByParametr(PLAYER_RUN_RIGHT_PARAMETR);
+                _directionToMove = Vector3.right * _runSpeed;
+            }
+            //если нажата клавиша A, проигрывание анимации Player_RunLeft
+            if (_directionSide < 0)
+            {
+                playerAnimationConrtol.ChangeAnimationByParametr(PLAYER_RUN_LEFT_PARAMETR);
+                _directionToMove = -Vector3.right * _runSpeed;
+            }
+            //расчет вектора движения
+            _directionToMove *= Time.deltaTime;
         }
-        //если нажата клавиша S, проигрывание анимации Player_WalkBackword
-        if (_directionForward < 0)
+        else
         {
-            playerAnimationConrtol.ChangeAnimationByParametr(PLAYER_WALK_BACKWARD_PARAMETR);
-            _directionToMove = -Vector3.forward * _walkSpeed;
-        }
-
-        if(_directionSide > 0)
-        {
-            playerAnimationConrtol.ChangeAnimationByParametr(PLAYER_WALK_RIGHT_PARAMETR);
-            _directionToMove = Vector3.right * _walkSpeed;
-        }
-        if(_directionSide < 0)
-        {
-            playerAnimationConrtol.ChangeAnimationByParametr(PLAYER_WALK_LEFT_PARAMETR);
-            _directionToMove = -Vector3.right * _walkSpeed;
-        }
-
-        //если скорость персонажа равна 0, проигрывание анимации IDLE
-        if (_directionForward == 0 && _directionSide == 0) playerAnimationConrtol.ChangeAnimationByParametr(PLAYER_IDLE_PARAMETR);
+            //если нажата клавиша W, проигрывание анимации Player_WalkForward
+            if (_directionForward > 0)
+            {
+                playerAnimationConrtol.ChangeAnimationByParametr(PLAYER_WALK_FORWARD_PARAMETR);
+                _directionToMove = Vector3.forward * _walkSpeed;
+            }
+            //если нажата клавиша S, проигрывание анимации Player_WalkBackward
+            if (_directionForward < 0)
+            {
+                playerAnimationConrtol.ChangeAnimationByParametr(PLAYER_WALK_BACKWARD_PARAMETR);
+                _directionToMove = -Vector3.forward * _walkSpeed;
+            }
+            //если нажата клавиша D, проигрывание анимации Player_WalkRight
+            if (_directionSide > 0)
+            {
+                playerAnimationConrtol.ChangeAnimationByParametr(PLAYER_WALK_RIGHT_PARAMETR);
+                _directionToMove = Vector3.right * _walkSpeed;
+            }
+            //если нажата клавиша A, проигрывание анимации Player_WalkLeft
+            if (_directionSide < 0)
+            {
+                playerAnimationConrtol.ChangeAnimationByParametr(PLAYER_WALK_LEFT_PARAMETR);
+                _directionToMove = -Vector3.right * _walkSpeed;
+            }
         //расчет вектора движения
         _directionToMove *= Time.deltaTime;
+        }
+        //если скорость персонажа равна 0, проигрывание анимации IDLE
+        if (_directionForward == 0 && _directionSide == 0)
+        {
+            playerAnimationConrtol.ChangeAnimationByParametr(PLAYER_IDLE_PARAMETR);
+        }
         StartCoroutine(Move(_directionToMove));
-       
-        
-
-        //_directionToMove *= Time.deltaTime;
-        //StartCoroutine(Move(_directionToMove));
-
     }
 
-    //private void FixedUpdate()
-    //{
-        
-    //}
 
     /// <summary>
-    /// Проверка на состояние бега
+    /// Проверка на состояние бега, если нажата кнопка LeftShift, то включен режим шага.
     /// </summary>
-    private void CheckingIsRunningState()
+    private bool CheckingIsRunningState()
     {
-        if (Input.GetKey(KeyCode.LeftShift)) _isRunning = true;
-        else _isRunning = false;
+        return (Input.GetKey(KeyCode.LeftShift)) ? false : true;
     }
 
     IEnumerator Move(Vector3 newDirection)
