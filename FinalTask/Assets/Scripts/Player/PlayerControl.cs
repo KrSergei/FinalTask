@@ -55,7 +55,6 @@ public class PlayerControl : MonoBehaviour
             _directionToMove = Vector3.zero;
             playerAnimationConrtol.SetFloatValueDirection("Forward", _directionForward);
             playerAnimationConrtol.SetFloatValueDirection("Side", _directionSide);
-            
         }
         #endregion
         //«апуск корутины передвижени€ с указанием результирующего вектора направлени€ движени€
