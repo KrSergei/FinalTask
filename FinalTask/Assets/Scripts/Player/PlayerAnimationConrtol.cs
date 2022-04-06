@@ -10,7 +10,6 @@ public class PlayerAnimationConrtol : MonoBehaviour
     void Start()
     {
         _anim = GetComponent<Animator>();
-        _currentKeyName = "IDLE";
     }
 
     /// <summary>
@@ -29,11 +28,23 @@ public class PlayerAnimationConrtol : MonoBehaviour
         if (_currentKeyName.Equals(newParametr)) return;
         _anim.SetTrigger(newParametr);
         _currentKeyName = newParametr;
-        Debug.Log("_currentParametr = " + _currentKeyName);
     }
+<<<<<<< HEAD
 
+    /// <summary>
+    /// Метод управления деревом анимации Movement.
+    /// </summary>
+    /// <param name="newParamentr">Имя параметра, в который передается значение</param>
+    /// <param name="newValue">Устанавливаемое значение параметра</param>
     public void SetFloatValueDirection(string newParamentr, float newValue)
+=======
+    public void ChangeAnimationByBoolParametr(string newParametr, bool state)
+>>>>>>> parent of ce50395 (Added BlenderTree and refactoring script)
     {
-        _anim.SetFloat(newParamentr, newValue);
+        if (_currentKeyName == newParametr) return;
+
+        _currentKeyName = newParametr;
+        _anim.SetBool(newParametr, state);
+        Debug.Log("_currentKeyName = " + _currentKeyName);
     }
 }
