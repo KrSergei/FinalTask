@@ -6,9 +6,10 @@ public class PlayerControl : MonoBehaviour
 {
     #region Constants
 
-    #endregion
+    private const string VERTICAL_PARAMETR_BLEND_TREE = "Forward";
+    private const string HORIZONTAL_PARAMETR_BLEND_TREE = "Side";
 
-    [SerializeField] private bool _isRunning = false;
+    #endregion
 
     public PlayerAnimationConrtol playerAnimationConrtol;
 
@@ -38,8 +39,8 @@ public class PlayerControl : MonoBehaviour
         //вызываетс€ метод дл€ изменени€ соответввующего значени€ в дереве анимаций Movement, с передачей параметра текущего значени€
         if (_directionForward != 0 || _directionSide != 0)
         {
-            playerAnimationConrtol.SetFloatValueDirection("Forward", _directionForward * CheckingIsRunningState());
-            playerAnimationConrtol.SetFloatValueDirection("Side", _directionSide * CheckingIsRunningState());
+            playerAnimationConrtol.SetFloatValueDirection(VERTICAL_PARAMETR_BLEND_TREE, _directionForward * CheckingIsRunningState());
+            playerAnimationConrtol.SetFloatValueDirection(HORIZONTAL_PARAMETR_BLEND_TREE, _directionSide * CheckingIsRunningState());
 
             //¬ычисление результирующего вектора движени€: сумма двух векторов по оси x и z.
             //¬екторы умножены на значение _directionForward и _directionSide соответсвенно. 
@@ -50,11 +51,11 @@ public class PlayerControl : MonoBehaviour
         }
         else
         {
-
-            playerAnimationConrtol.SetFloatValueDirection("Forward", _directionForward);
-            playerAnimationConrtol.SetFloatValueDirection("Side", _directionSide);
             //ќбнуление вектора передвижени€
             _directionToMove = Vector3.zero;
+            playerAnimationConrtol.SetFloatValueDirection("Forward", _directionForward);
+            playerAnimationConrtol.SetFloatValueDirection("Side", _directionSide);
+            
         }
         #endregion
         //«апуск корутины передвижени€ с указанием результирующего вектора направлени€ движени€
