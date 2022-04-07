@@ -16,7 +16,6 @@ public class FollowCamera : MonoBehaviour
     {
         _camerasArray = GetComponentsInChildren<Camera>();
         _currentCameraIndex = 0;
-        //_currentCamera = _camerasArray[_currentCameraIndex];
         SetInActiveNotUsesCameras();
         _playerTransform = FindObjectOfType<Player>().transform;
         //Получение значения
