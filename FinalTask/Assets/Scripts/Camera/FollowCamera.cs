@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class FollowCamera : MonoBehaviour
 {
- 
     [SerializeField] private Camera[] _camerasArray;       //массив камер
     [SerializeField] private Transform _playerTransform;   //трансформ игрока
+
 
     private Vector3 offset;                 //расстояние между точкой привязки камер (родительский объект для камер) и игроком
     private int _currentCameraIndex;        //индекс текущй камеры
