@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class PlayerAiming : MonoBehaviour
 {
-    [SerializeField] private float _turnSpeed = 15f;
-    private Camera _mainCamera;
+    [SerializeField] private float _turnSpeed = 15f;  //Скорость поворота камеры
+    private Camera _mainCamera;                       //Основная камера
 
     void Start()
     {
