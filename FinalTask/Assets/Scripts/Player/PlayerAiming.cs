@@ -17,7 +17,9 @@ public class PlayerAiming : MonoBehaviour
     
     void FixedUpdate()
     {
+        //Получение значение поворота камеры по оси y
         float yawCamera = _mainCamera.transform.eulerAngles.y;
+        //Поворот игрока
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0f, yawCamera, 0f), _turnSpeed * Time.fixedDeltaTime);
     }
 }
