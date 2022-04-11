@@ -1,16 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerAnimationConrtol : MonoBehaviour
 {
-    Animator _anim;
+    public Animator _anim;
     [SerializeField] private string _currentState;
     [SerializeField] private string _currentKeyName;
-    void Start()
-    {
-        _anim = GetComponent<Animator>();
-    }
 
     /// <summary>
     /// Метод для изменения текущего состояния (включения) анимации по имени входящего параметра
