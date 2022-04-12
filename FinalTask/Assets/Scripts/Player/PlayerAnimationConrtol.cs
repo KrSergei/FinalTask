@@ -7,10 +7,10 @@ public class PlayerAnimationConrtol : MonoBehaviour
     [SerializeField] private string _currentKeyName;
 
 
-    //private void Start()
-    //{
-    //    _anim = GetComponent<Animator>();
-    //}
+    private void Start()
+    {
+        _anim = GetComponent<Animator>();
+    }
 
     /// <summary>
     /// Метод для изменения текущего состояния (включения) анимации по имени входящего параметра

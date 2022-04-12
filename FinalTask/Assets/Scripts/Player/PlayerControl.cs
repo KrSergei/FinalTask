@@ -10,7 +10,8 @@ public class PlayerControl : MonoBehaviour
     #endregion
 
     public PlayerAnimationConrtol playerAnimationConrtol;
-    public Transform _camera;
+    public Transform _mainCamera;
+    public CinemachineCameraOffset _virtualcamera;
 
     [SerializeField] private float _walkSpeed = 1f;
     [SerializeField] private float _runSpeed = 3f;
@@ -26,7 +27,10 @@ public class PlayerControl : MonoBehaviour
     {
         _cc = GetComponent<CharacterController>();
         playerAnimationConrtol = GetComponent<PlayerAnimationConrtol>();
-        _directionToMove = Vector3.zero; 
+        _directionToMove = Vector3.zero;
+        _mainCamera = Camera.main.transform;
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     void FixedUpdate()
@@ -34,19 +38,24 @@ public class PlayerControl : MonoBehaviour
         #region Control player
         _directionSide = Input.GetAxis("Horizontal");
         _directionForward = Input.GetAxis("Vertical");
+        Vector3 direction = new Vector3(_directionSide, 0f, _directionForward).normalized;
+  
+        //Запуск корутины поворота игрока с учетом направлеиня камеры
+        StartCoroutine(Rotate());
 
-
-        //Если нажата любая из клавиш управления (W, A, S, D), в управляющем анимацией скрипте
-        //вызывается метод для изменения соответввующего значения в дереве анимаций Movement, с передачей параметра текущего значения
+        ////Если нажата любая из клавиш управления (W, A, S, D), в управляющем анимацией скрипте
+        ////вызывается метод для изменения соответввующего значения в дереве анимаций Movement, с передачей параметра текущего значения
         if (_directionForward != 0 || _directionSide != 0)
         {
             playerAnimationConrtol.SetFloatValueDirection(VERTICAL_PARAMETR_BLEND_TREE, _directionForward * CheckingIsRunningState());
             playerAnimationConrtol.SetFloatValueDirection(HORIZONTAL_PARAMETR_BLEND_TREE, _directionSide * CheckingIsRunningState());
 
-            //Вычисление результирующего вектора движения: сумма двух векторов по оси x и z.
+            //Вычисление результирующего вектора движения: сумма двух векторов по оси x и z, усноженной на угол поворота игрока на угол, равный поворота главной камеры
             //Векторы умножены на значение _directionForward и _directionSide соответсвенно. 
-            //Итоговый суммарный вектор нормализован и умножен на значение скорости в зависимости от состояния (бег или шаг).
-            _directionToMove = (((Vector3.forward * _directionForward) + ((Vector3.right * _directionSide))).normalized) * CheckingIsRunningState() * Time.deltaTime;
+            //Итоговый суммарный вектор умножен на значение скорости в зависимости от состояния (бег или шаг).
+            _directionToMove = Quaternion.Euler(0f, _mainCamera.eulerAngles.y, 0f) 
+                * ((Vector3.forward * _directionForward) + (Vector3.right * _directionSide))
+                * CheckingIsRunningState() * Time.fixedDeltaTime;
         }
         else
         {
@@ -56,10 +65,10 @@ public class PlayerControl : MonoBehaviour
             playerAnimationConrtol.SetFloatValueDirection("Side", _directionSide);
         }
         #endregion
-        //Запуск корутины поворота игрока с учетом направлеиня камеры
-        //StartCoroutine(Rotate(_directionToMove));
+        ////Запуск корутины поворота игрока с учетом направлеиня камеры
+        ////StartCoroutine(Rotate());
 
-        //Запуск корутины передвижения с указанием результирующего вектора направления движения
+        ////Запуск корутины передвижения с указанием результирующего вектора направления движения
         StartCoroutine(Move(_directionToMove));
 
     }
@@ -73,20 +82,22 @@ public class PlayerControl : MonoBehaviour
         return (Input.GetKey(KeyCode.LeftShift)) ? _runSpeed : _walkSpeed;
     }
 
-    IEnumerator Rotate(Vector3 newDirection)
+    IEnumerator Rotate()
     {
         #region var1 Don't working normal
         ////вычисление угола поворота
-        //float targetAngle = Mathf.Atan2(newDirection.x, Mathf.Abs(newDirection.z)) * Mathf.Rad2Deg + _camera.eulerAngles.y;
+        //float targetAngle = Mathf.Atan2(newDirection.x, Mathf.Abs(newDirection.z)) * Mathf.Rad2Deg + _mainCamera.eulerAngles.y;
         ////вычисление угла поворота для постепенного поворота с учетом сокрости поворота и времени
         //float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref _turnSmoothVelocity, _turnSmoothTime);
         ////поворот игрока
         //transform.rotation = Quaternion.Euler(0f, angle, 0f);
         ////вычислеине нового вектора движения  с учетом поворота игрока
         //_directionToMove = (Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward).normalized;
-        #endregion+
+        #endregion
 
-
+    
+        //Поворот игрока c учетом угла поворота камеры
+        transform.rotation = Quaternion.Euler(0f, _mainCamera.eulerAngles.y, 0f);
 
         yield return null;
     }
