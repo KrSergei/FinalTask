@@ -5,46 +5,57 @@ using UnityEngine;
 public class PlayerControl : MonoBehaviour
 {
     #region Constants
-    private const string VERTICAL_PARAMETR_BLEND_TREE = "Forward";
+    private const string VERTICAL_PARAMETR_BLEND_TREE = "Forward"; 
     private const string HORIZONTAL_PARAMETR_BLEND_TREE = "Side";
     #endregion
 
-    public PlayerAnimationConrtol playerAnimationConrtol;
-    public Transform _mainCamera;
-    public CinemachineCameraOffset _virtualcamera;
+    public PlayerAnimationConrtol playerAnimationConrtol;   //Компонент аниматор
+    public Transform mainCamera;                            //Трансформ основной камеры
+    public LayerMask layerMaskGround;                       //Маска поверхности
+    public float distanceToGround = 0.1f;                   //Расстояние до поверхности
 
-    [SerializeField] private float _walkSpeed = 1f;
-    [SerializeField] private float _runSpeed = 3f;
-    [SerializeField] private Vector3 _directionToMove;
-    [SerializeField] private float _directionSide;
-    [SerializeField] private float _directionForward;
-    [SerializeField] private float _turnSmoothTime = 0.1f;
-    [SerializeField] private float _turnSmoothVelocity;
-
-    CharacterController _cc;
+    [SerializeField] private float _walkSpeed = 1f;         //Скорость передвижения при анимации ходьбы
+    [SerializeField] private float _runSpeed = 3f;          //Скорость передвижения при анимации бега
+    [SerializeField] private float _directionSide;          //Направлеине движения в стороны
+    [SerializeField] private float _directionForward;       //Направлеине движения вперед
+    [SerializeField] private float _gravityForce;           //Коэффициент силы тяжести
+    [SerializeField] private Vector3 _directionToMove;      //Итоговый ветор направления движения
+    [SerializeField] private bool _isGround;                //Флаг, находится игрок на земле или нет
+    private CharacterController _cc;  
+    private Vector3 _gravity;               //Вектор гравитации
 
     void Start()
     {
+        //Получение компонента CharacterController
         _cc = GetComponent<CharacterController>();
+        //Получение компонента PlayerAnimationConrtol
         playerAnimationConrtol = GetComponent<PlayerAnimationConrtol>();
+
+        //playerGroudChecker = GetComponentInChildren<PlayerGroundChecker>();
+        //Установка вектора движения в 0
         _directionToMove = Vector3.zero;
-        _mainCamera = Camera.main.transform;
+        //Определение трансформа основной камеры
+        mainCamera = Camera.main.transform;
+        //Скрытие курсора
         Cursor.visible = false;
+        //Блокирование курсора по центру карты
         Cursor.lockState = CursorLockMode.Locked;
     }
 
     void FixedUpdate()
     {
         #region Control player
+        //Вызом метода по определению, на поверхности или нет игрок
+        IsGround();
+
         _directionSide = Input.GetAxis("Horizontal");
         _directionForward = Input.GetAxis("Vertical");
-        Vector3 direction = new Vector3(_directionSide, 0f, _directionForward).normalized;
   
-        //Запуск корутины поворота игрока с учетом направлеиня камеры
+        //Запуск корутины поворота игрока с учетом направления камеры
         StartCoroutine(Rotate());
 
-        ////Если нажата любая из клавиш управления (W, A, S, D), в управляющем анимацией скрипте
-        ////вызывается метод для изменения соответввующего значения в дереве анимаций Movement, с передачей параметра текущего значения
+        //Если нажата любая из клавиш управления (W, A, S, D), в управляющем анимацией скрипте
+        //вызывается метод для изменения соответввующего значения в дереве анимаций Movement, с передачей параметра текущего значения
         if (_directionForward != 0 || _directionSide != 0)
         {
             playerAnimationConrtol.SetFloatValueDirection(VERTICAL_PARAMETR_BLEND_TREE, _directionForward * CheckingIsRunningState());
@@ -53,7 +64,7 @@ public class PlayerControl : MonoBehaviour
             //Вычисление результирующего вектора движения: сумма двух векторов по оси x и z, усноженной на угол поворота игрока на угол, равный поворота главной камеры
             //Векторы умножены на значение _directionForward и _directionSide соответсвенно. 
             //Итоговый суммарный вектор умножен на значение скорости в зависимости от состояния (бег или шаг).
-            _directionToMove = Quaternion.Euler(0f, _mainCamera.eulerAngles.y, 0f) 
+            _directionToMove = Quaternion.Euler(0f, mainCamera.eulerAngles.y, 0f)
                 * ((Vector3.forward * _directionForward) + (Vector3.right * _directionSide))
                 * CheckingIsRunningState() * Time.fixedDeltaTime;
         }
@@ -65,12 +76,11 @@ public class PlayerControl : MonoBehaviour
             playerAnimationConrtol.SetFloatValueDirection("Side", _directionSide);
         }
         #endregion
-        ////Запуск корутины поворота игрока с учетом направлеиня камеры
-        ////StartCoroutine(Rotate());
 
+        //Добавление гравитации с учетом нахождения на поверхности
+        _directionToMove += _gravity;
         ////Запуск корутины передвижения с указанием результирующего вектора направления движения
         StartCoroutine(Move(_directionToMove));
-
     }
 
     /// <summary>
@@ -82,23 +92,31 @@ public class PlayerControl : MonoBehaviour
         return (Input.GetKey(KeyCode.LeftShift)) ? _runSpeed : _walkSpeed;
     }
 
+    /// <summary>
+    /// Метод проверки на поверхности или нет персонаж
+    /// </summary>
+    private void IsGround()
+    {
+        if (_cc.isGrounded)
+        {
+            _isGround = true;
+            _gravity = Physics.gravity * 0.01f;
+        }
+        else
+        {
+            _isGround = false;
+            _gravity += Physics.gravity * Time.deltaTime * _gravityForce;
+        }
+    }
+
+    /// <summary>
+    /// Поворот игрока
+    /// </summary>
+    /// <returns></returns>
     IEnumerator Rotate()
     {
-        #region var1 Don't working normal
-        ////вычисление угола поворота
-        //float targetAngle = Mathf.Atan2(newDirection.x, Mathf.Abs(newDirection.z)) * Mathf.Rad2Deg + _mainCamera.eulerAngles.y;
-        ////вычисление угла поворота для постепенного поворота с учетом сокрости поворота и времени
-        //float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref _turnSmoothVelocity, _turnSmoothTime);
-        ////поворот игрока
-        //transform.rotation = Quaternion.Euler(0f, angle, 0f);
-        ////вычислеине нового вектора движения  с учетом поворота игрока
-        //_directionToMove = (Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward).normalized;
-        #endregion
-
-    
         //Поворот игрока c учетом угла поворота камеры
-        transform.rotation = Quaternion.Euler(0f, _mainCamera.eulerAngles.y, 0f);
-
+        transform.rotation = Quaternion.Euler(0f, mainCamera.eulerAngles.y, 0f);
         yield return null;
     }
 
