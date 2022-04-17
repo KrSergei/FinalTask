@@ -97,7 +97,7 @@ public class PlayerControl : MonoBehaviour
     /// </summary>
     private void IsGround()
     {
-        if (_cc.isGrounded && _cc.velocity.y < distanceToGround)
+        if (_cc.isGrounded)
         {
             _isGround = true;
             _gravity = Physics.gravity * 0.01f;
