@@ -1463,7 +1463,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 424187972}
-  m_LocalRotation: {x: 0.0034356797, y: 0.0000000011951252, z: -4.0257923e-12, w: 0.9999941}
+  m_LocalRotation: {x: 0.0034356797, y: -0.0000000011951252, z: 4.0257923e-12, w: 0.9999941}
   m_LocalPosition: {x: 17.196, y: 1.6160156, z: -19.534534}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1755,7 +1755,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 579550217}
-  m_LocalRotation: {x: 0.02162449, y: -0.0000000010751473, z: 2.3254952e-11, w: 0.9997662}
+  m_LocalRotation: {x: 0.021624492, y: 0.0000000010751473, z: -2.3254954e-11, w: 0.9997662}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2328,7 +2328,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 881294876}
-  m_LocalRotation: {x: -0.01470624, y: 5.376412e-10, z: 7.907535e-12, w: 0.9998919}
+  m_LocalRotation: {x: -0.01470624, y: -5.3764126e-10, z: -7.907536e-12, w: 0.9998919}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -3688,6 +3688,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1305335209}
   - component: {fileID: 1305335211}
+  - component: {fileID: 1305335212}
   - component: {fileID: 1305335210}
   m_Layer: 0
   m_Name: WeaponPose
@@ -3812,6 +3813,62 @@ MonoBehaviour:
     m_MaintainOffset: 0
   m_SourceObjectsGUIToggle: 1
   m_SettingsGUIToggle: 1
+--- !u!114 &1305335212
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1305335208}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3c430f382484144e925c097c2d33cfe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Weight: 1
+  m_Data:
+    m_ConstrainedObject: {fileID: 1305335209}
+    m_SourceObjects:
+      m_Length: 1
+      m_Item0:
+        transform: {fileID: 2043462414}
+        weight: 1
+      m_Item1:
+        transform: {fileID: 0}
+        weight: 0
+      m_Item2:
+        transform: {fileID: 0}
+        weight: 0
+      m_Item3:
+        transform: {fileID: 0}
+        weight: 0
+      m_Item4:
+        transform: {fileID: 0}
+        weight: 0
+      m_Item5:
+        transform: {fileID: 0}
+        weight: 0
+      m_Item6:
+        transform: {fileID: 0}
+        weight: 0
+      m_Item7:
+        transform: {fileID: 0}
+        weight: 0
+    m_Offset: {x: 0, y: 0, z: 0}
+    m_MinLimit: -180
+    m_MaxLimit: 180
+    m_AimAxis: 4
+    m_UpAxis: 2
+    m_WorldUpType: 0
+    m_WorldUpObject: {fileID: 0}
+    m_WorldUpAxis: 2
+    m_MaintainOffset: 0
+    m_ConstrainedAxes:
+      x: 1
+      y: 1
+      z: 1
+  m_SourceObjectsGUIToggle: 1
+  m_SettingsGUIToggle: 0
 --- !u!1 &1309265036
 GameObject:
   m_ObjectHideFlags: 0
@@ -4157,7 +4214,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1401967930}
-  m_LocalRotation: {x: 0.0034356776, y: 0.0000000011834159, z: -4.0658596e-12, w: 0.9999941}
+  m_LocalRotation: {x: 0.0034356776, y: -0.0000000011834159, z: 4.0658596e-12, w: 0.9999941}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
