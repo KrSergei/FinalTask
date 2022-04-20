@@ -22,7 +22,8 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] private Vector3 _directionToMove;      //Итоговый ветор направления движения
     [SerializeField] private bool _isGround;                //Флаг, находится игрок на земле или нет
     private CharacterController _cc;  
-    private Vector3 _gravity;               //Вектор гравитации
+    private Vector3 _gravity;                               //Вектор гравитации
+    private float _radiusCheckingGround = 0.25f;                    //Радиус сферы для проверки находится игрок на земле или нет
 
     void Start()
     {
@@ -30,8 +31,6 @@ public class PlayerControl : MonoBehaviour
         _cc = GetComponent<CharacterController>();
         //Получение компонента PlayerAnimationConrtol
         playerAnimationConrtol = GetComponent<PlayerAnimationConrtol>();
-
-        //playerGroudChecker = GetComponentInChildren<PlayerGroundChecker>();
         //Установка вектора движения в 0
         _directionToMove = Vector3.zero;
         //Определение трансформа основной камеры
@@ -97,16 +96,25 @@ public class PlayerControl : MonoBehaviour
     /// </summary>
     private void IsGround()
     {
-        if (_cc.isGrounded && _cc.velocity.y < distanceToGround)
-        {
-            _isGround = true;
-            _gravity = Physics.gravity * 0.01f;
-        }
-        else
-        {
-            _isGround = false;
-            _gravity += Physics.gravity * Time.deltaTime * _gravityForce;
-        }
+        //Проверка на нахожждение игрока на поверхности с указанной маской слоев
+        bool checkGround = (Physics.CheckSphere(transform.position, _radiusCheckingGround, layerMaskGround));
+        //Если игрок на земле, то установка флага _isGround = true
+        //и установка минимальной гравитации для возможности плавного передвижения по наклонным поверкхностям
+        //иначе добавление к вестору движения игрока вектора гравитации
+        if (checkGround)_isGround = true;
+        else _isGround = false;
+        //Вызов метода установки вектора гравитации
+        SetGravityValue(checkGround);
+    }
+
+    /// <summary>
+    /// Методу установки вектора гравитации в зависимости от значения параметра
+    /// </summary>
+    /// <param name="isGround"></param>
+    private void SetGravityValue(bool isGround)
+    {
+        if (isGround) _gravity = Physics.gravity * 0.01f; 
+        else _gravity += Physics.gravity * Time.deltaTime * _gravityForce;
     }
 
     /// <summary>
