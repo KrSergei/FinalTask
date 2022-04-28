@@ -23,6 +23,7 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] private float _directionForward;       //Направлеине движения вперед
     [SerializeField] private float _gravityForce;           //Коэффициент силы тяжести
     [SerializeField] private float _jumpForce = 10f;
+    [SerializeField] private float _deltaJumpForce;            
     [SerializeField] private Vector3 _directionToMove;      //Итоговый ветор направления движения
     [SerializeField] private bool _isGround;                //Флаг, находится игрок на земле или нет
 
@@ -95,12 +96,14 @@ public class PlayerControl : MonoBehaviour
                 doJump = true;
                 //вычисление позиции высоты
                 _highForJump = transform.position.y + _jumpForce;
+                StartCoroutine(DoJump(_highForJump));
             }
         }
         //Пока игрок находится в выполнении прыжка, запуск корутины по выполнению прыжка
         if (doJump)
         {
-            //StartCoroutine(DoJump(_highForJump));
+            //Запуск корутины прыжка
+            StartCoroutine(DoJump(_highForJump));
         }
         //Добавление гравитации к итоговому вектору движения
         _directionToMove += _gravity;
@@ -117,29 +120,25 @@ public class PlayerControl : MonoBehaviour
         return (Input.GetKey(KeyCode.LeftShift)) ? _runSpeed : _walkSpeed;
     }
 
+    /// <summary>
+    /// Реализация прыжа
+    /// </summary>
+    /// <param name="highJump">высота на которую должен прыгнуть игрок</param>
+    /// <returns></returns>
     IEnumerator DoJump(float highJump)
     {
-        //пока позация игрока меньше  либо требуемой высоты прыжка
-        //if (transform.position.y <= highJump)
-        //{
-        //    //обнуление вектора гравитации
-        //    _gravity = Vector3.zero;
-        //    //вычисление позиции по оси Y
-        //    _directionToMove.y += _jumpForce * 0.1f;
-        //}
-        //else  doJump = false;
-
-
-        while (transform.position.y <= highJump)
+        //пока позиция игрока меньше требуемой высоты прыжка
+        if (transform.position.y <= highJump)
         {
-            Debug.Log("Coroutine jump working");
             //обнуление вектора гравитации
             _gravity = Vector3.zero;
-            //вычисление позиции по оси Y
-            _directionToMove.y += _jumpForce * 0.1f;
-            yield return null;
+            //изменение позиции по оси Y
+            _directionToMove.y += _jumpForce * _deltaJumpForce;
         }
+        else doJump = false;
+        yield return null;
     }
+
     /// <summary>
     /// Метод проверки на поверхности или нет персонаж
     /// </summary>
@@ -164,10 +163,6 @@ public class PlayerControl : MonoBehaviour
     {
         if (isGround) _gravity = Physics.gravity * _gravityForce;
         else _gravity += Physics.gravity * Time.deltaTime * _gravityForce;
-        //{
-        //    if (doJump) _gravity += Physics.gravity * Time.deltaTime * -_gravityForce;
-        //    else _gravity += Physics.gravity * Time.deltaTime * _gravityForce;
-        //}
     }
 
     /// <summary>
@@ -191,5 +186,4 @@ public class PlayerControl : MonoBehaviour
         _cc.Move(newDirection);
         yield return null;
     }
-    
 }
