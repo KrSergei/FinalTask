@@ -38,7 +38,7 @@ ModelImporter:
       name: Jump_Backward
       takeName: mixamo.com
       internalID: 0
-      firstFrame: 7
+      firstFrame: 9
       lastFrame: 50
       wrapMode: 0
       orientationOffsetY: 0

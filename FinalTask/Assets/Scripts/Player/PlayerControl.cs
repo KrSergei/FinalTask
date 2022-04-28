@@ -92,7 +92,7 @@ public class PlayerControl : MonoBehaviour
 
         if (_isGround)
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space) && !doJump)
             {
                 doJump = true;
                 //вычисление позиции высоты

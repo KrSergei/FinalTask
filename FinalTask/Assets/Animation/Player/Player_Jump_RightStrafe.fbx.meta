@@ -38,7 +38,7 @@ ModelImporter:
       name: Jump_RightStrafe
       takeName: mixamo.com
       internalID: 0
-      firstFrame: 0
+      firstFrame: 6
       lastFrame: 40
       wrapMode: 0
       orientationOffsetY: 0
@@ -48,7 +48,7 @@ ModelImporter:
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 0
+      loopBlendOrientation: 1
       loopBlendPositionY: 1
       loopBlendPositionXZ: 1
       keepOriginalOrientation: 1
