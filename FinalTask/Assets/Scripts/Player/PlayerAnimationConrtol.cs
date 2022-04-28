@@ -28,7 +28,7 @@ public class PlayerAnimationConrtol : MonoBehaviour
         if (_currentKeyName.Equals(newParametr)) return;
         _anim.SetTrigger(newParametr);
         _currentKeyName = newParametr;
-        Invoke("CancelCurrentParametr", 0f);
+        Invoke("CancelCurrentParametr", 1f);
     }
 
     /// <summary>
