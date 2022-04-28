@@ -8,6 +8,7 @@ public class PlayerControl : MonoBehaviour
     #region Constants
     private const string VERTICAL_PARAMETR_BLEND_TREE = "Forward"; 
     private const string HORIZONTAL_PARAMETR_BLEND_TREE = "Side";
+    private const string JUMP_PARAMETR_BLEND_TREE = "Jump";
     #endregion
 
     public PlayerAnimationConrtol playerAnimationConrtol;   //Компонент аниматор
@@ -97,6 +98,7 @@ public class PlayerControl : MonoBehaviour
                 //вычисление позиции высоты
                 _highForJump = transform.position.y + _jumpForce;
                 StartCoroutine(DoJump(_highForJump));
+                playerAnimationConrtol.ChangeAnimationByParametr(JUMP_PARAMETR_BLEND_TREE);
             }
         }
         //Пока игрок находится в выполнении прыжка, запуск корутины по выполнению прыжка

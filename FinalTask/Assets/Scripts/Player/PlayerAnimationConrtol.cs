@@ -28,6 +28,7 @@ public class PlayerAnimationConrtol : MonoBehaviour
         if (_currentKeyName.Equals(newParametr)) return;
         _anim.SetTrigger(newParametr);
         _currentKeyName = newParametr;
+        Invoke("CancelCurrentParametr", 0f);
     }
 
     /// <summary>
@@ -38,5 +39,10 @@ public class PlayerAnimationConrtol : MonoBehaviour
     public void SetFloatValueDirection(string newParamentr, float newValue)
     {
         _anim.SetFloat(newParamentr, newValue);
+    }
+
+    private void CancelCurrentParametr()
+    {
+        _currentKeyName = "";
     }
 }
