@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
-public class PlayerControl : MonoBehaviour
+public class Control : MonoBehaviour
 {
     #region Constants
-    private const string VERTICAL_PARAMETR_BLEND_TREE = "Forward"; 
+    private const string VERTICAL_PARAMETR_BLEND_TREE = "Forward";
     private const string HORIZONTAL_PARAMETR_BLEND_TREE = "Side";
-    private const string JUMP_PARAMETR_BLEND_TREE = "Jump";
-    private const string MOVING_PARAMETR_BLEND_TREE = "IsMoving";
     #endregion
 
     public PlayerAnimationConrtol playerAnimationConrtol;   //Компонент аниматор
@@ -25,15 +23,14 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] private float _directionForward;       //Направлеине движения вперед
     [SerializeField] private float _gravityForce;           //Коэффициент силы тяжести
     [SerializeField] private float _jumpForce = 10f;
-    [SerializeField] private float _deltaJumpForce;            
+    [SerializeField] private float _deltaJumpForce;
     [SerializeField] private Vector3 _directionToMove;      //Итоговый ветор направления движения
-    [SerializeField] private float _radiusGroundChecker;    //Радиус сферы для проверки находится игрок на земле или нет
     [SerializeField] private bool _isGround;                //Флаг, находится игрок на земле или нет
-    [SerializeField] private bool _isMoving;                //Флаг, находится игрок в движении или нет
 
-    private CharacterController _cc; 
+    private CharacterController _cc;
     [SerializeField]
     private Vector3 _gravity;                              //Вектор гравитации
+    private float _radiusGroundChecker = 0.25f;            //Радиус сферы для проверки находится игрок на земле или нет
     private float _highForJump;                            //Высота для прыжка. Вычисляет суммой текущей позиции игрока по позиции Y + _jumpForce
 
     void Start()
@@ -54,31 +51,7 @@ public class PlayerControl : MonoBehaviour
 
     private void Update()
     {
-        //Вызом метода по определению, на поверхности или нет игрок
-        IsGround();
 
-        //Запуск корутины поворота игрока с учетом направления камеры
-        StartCoroutine(Rotate());
-
-        if (_isGround && !doJump)
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                doJump = true;
-                _directionSide = 0;
-                _directionForward = 0;
-                //вычисление позиции высоты
-                _highForJump = transform.position.y + _jumpForce;
-                //playerAnimationConrtol.PlayAnimationByParametr(JUMP_PARAMETR_BLEND_TREE);
-
-            }
-        }
-        //Пока игрок находится в выполнении прыжка, запуск корутины по выполнению прыжка
-        if (doJump)
-        {
-            //Запуск корутины прыжка
-            StartCoroutine(DoJump(_highForJump));
-        }
     }
 
     void FixedUpdate()
@@ -87,39 +60,53 @@ public class PlayerControl : MonoBehaviour
         //Вызом метода по определению, на поверхности или нет игрок
         IsGround();
 
+        _directionSide = Input.GetAxis("Horizontal");
+        _directionForward = Input.GetAxis("Vertical");
+
         //Запуск корутины поворота игрока с учетом направления камеры
         StartCoroutine(Rotate());
 
-        if (doJump == false)
+        //Если нажата любая из клавиш управления (W, A, S, D), в управляющем анимацией скрипте
+        //вызывается метод для изменения соответввующего значения в дереве анимаций Movement, с передачей параметра текущего значения
+        if (_directionForward != 0 || _directionSide != 0)
         {
-            _directionSide = Input.GetAxis("Horizontal");
-            _directionForward = Input.GetAxis("Vertical");
-            //Если нажата любая из клавиш управления(W, A, S, D), в управляющем анимацией скрипте
-            //вызывается метод для изменения соответввующего значения в дереве анимаций Movement, с передачей параметра текущего значения
-            if (_directionForward != 0 || _directionSide != 0)
-            {
+            playerAnimationConrtol.SetFloatValueDirection(VERTICAL_PARAMETR_BLEND_TREE, _directionForward * CheckingIsRunningState());
+            playerAnimationConrtol.SetFloatValueDirection(HORIZONTAL_PARAMETR_BLEND_TREE, _directionSide * CheckingIsRunningState());
 
-                playerAnimationConrtol.SetFloatValueDirection(VERTICAL_PARAMETR_BLEND_TREE, _directionForward * CheckingIsRunningState());
-                playerAnimationConrtol.SetFloatValueDirection(HORIZONTAL_PARAMETR_BLEND_TREE, _directionSide * CheckingIsRunningState());
-                //Вычисление результирующего вектора движения: сумма двух векторов по оси x и z, умноженной на угол поворота игрока на угол, равный поворота главной камеры
-                //Векторы умножены на значение _directionForward и _directionSide соответсвенно. 
-                //Итоговый суммарный вектор умножен на значение скорости в зависимости от состояния (бег или шаг).
-                _directionToMove = Quaternion.Euler(0f, mainCamera.eulerAngles.y, 0f)
-                    * ((Vector3.forward * _directionForward) + (Vector3.right * _directionSide))
-                    * CheckingIsRunningState() * Time.deltaTime;
-            }
-            else
-            {
-                //Обнуление вектора передвижения
-                _directionToMove = Vector3.zero;
-                playerAnimationConrtol.SetFloatValueDirection("Forward", 0);
-                playerAnimationConrtol.SetFloatValueDirection("Side", 0);
-                //playerAnimationConrtol.PlayAnimationByParametr(MOVING_PARAMETR_BLEND_TREE, false);
-            }
+            //Вычисление результирующего вектора движения: сумма двух векторов по оси x и z, умноженной на угол поворота игрока на угол, равный поворота главной камеры
+            //Векторы умножены на значение _directionForward и _directionSide соответсвенно. 
+            //Итоговый суммарный вектор умножен на значение скорости в зависимости от состояния (бег или шаг).
+            _directionToMove = Quaternion.Euler(0f, mainCamera.eulerAngles.y, 0f)
+                * ((Vector3.forward * _directionForward) + (Vector3.right * _directionSide))
+                * CheckingIsRunningState() * Time.deltaTime;
+        }
+        else
+        {
+            //Обнуление вектора передвижения
+            _directionToMove = Vector3.zero;
+            playerAnimationConrtol.SetFloatValueDirection("Forward", _directionForward);
+            playerAnimationConrtol.SetFloatValueDirection("Side", _directionSide);
         }
         #endregion
-       //Добавление гравитации к итоговому вектору движения
-       _directionToMove += _gravity;
+
+        if (_isGround)
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                doJump = true;
+                //вычисление позиции высоты
+                _highForJump = transform.position.y + _jumpForce;
+                StartCoroutine(DoJump(_highForJump));
+            }
+        }
+        //Пока игрок находится в выполнении прыжка, запуск корутины по выполнению прыжка
+        if (doJump)
+        {
+            //Запуск корутины прыжка
+            StartCoroutine(DoJump(_highForJump));
+        }
+        //Добавление гравитации к итоговому вектору движения
+        _directionToMove += _gravity;
         //Запуск корутины передвижения с указанием результирующего вектора направления движения
         StartCoroutine(Move(_directionToMove));
     }
@@ -140,7 +127,6 @@ public class PlayerControl : MonoBehaviour
     /// <returns></returns>
     IEnumerator DoJump(float highJump)
     {
-        //print("Start jump");
         //пока позиция игрока меньше требуемой высоты прыжка
         if (transform.position.y <= highJump)
         {
@@ -149,15 +135,8 @@ public class PlayerControl : MonoBehaviour
             //изменение позиции по оси Y
             _directionToMove.y += _jumpForce * _deltaJumpForce;
         }
-        else CanselActiveState();
+        else doJump = false;
         yield return null;
-    }
-
-    public void CanselActiveState()
-    {
-        doJump = false;
-        _directionSide = 0;
-        _directionForward = 0;
     }
 
     /// <summary>
@@ -170,7 +149,7 @@ public class PlayerControl : MonoBehaviour
         //Если игрок на земле, то установка флага _isGround = true
         //и установка минимальной гравитации для возможности плавного передвижения по наклонным поверкхностям
         //иначе добавление к вестору движения игрока вектора гравитации
-        if (checkGround)_isGround = true;
+        if (checkGround) _isGround = true;
         else _isGround = false;
         //Вызов метода установки вектора гравитации
         SetGravityValue(checkGround);
@@ -183,7 +162,7 @@ public class PlayerControl : MonoBehaviour
     private void SetGravityValue(bool isGround)
     {
         if (isGround) _gravity = Physics.gravity * _gravityForce;
-        else _gravity += Physics.gravity * _gravityForce;
+        else _gravity += Physics.gravity * Time.deltaTime * _gravityForce;
     }
 
     /// <summary>

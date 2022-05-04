@@ -3,6 +3,8 @@ using UnityEngine;
 public class PlayerAnimationConrtol : MonoBehaviour
 {
     public Animator _anim;
+    public float offsetCancelAnimation;
+
     [SerializeField] private string _currentState;
     [SerializeField] private string _currentKeyName;
 
@@ -23,12 +25,21 @@ public class PlayerAnimationConrtol : MonoBehaviour
         _currentState = newState;
     }
 
-    public void ChangeAnimationByParametr(string newParametr)
+    public void PlayAnimationByParametr(string nameParametr, bool value)
+    {
+        _anim.SetBool(nameParametr, value);
+        //print("Current animation length - " + _anim.GetCurrentAnimatorStateInfo(0).length);
+        Invoke("CancelCurrentParametr", _anim.GetCurrentAnimatorStateInfo(0).length);
+    }
+
+    public void PlayAnimationByParametr(string newParametr)
     {
         if (_currentKeyName.Equals(newParametr)) return;
         _anim.SetTrigger(newParametr);
         _currentKeyName = newParametr;
-        Invoke("CancelCurrentParametr", 1f);
+        //print("Current animation length - " + _anim.GetCurrentAnimatorStateInfo(0).length);
+        //обнуление текущего имени параметра анимации после окончания
+        Invoke("CancelCurrentParametr", _anim.GetCurrentAnimatorStateInfo(0).length);
     }
 
     /// <summary>
@@ -38,11 +49,12 @@ public class PlayerAnimationConrtol : MonoBehaviour
     /// <param name="newValue">Устанавливаемое значение параметра</param>
     public void SetFloatValueDirection(string newParamentr, float newValue)
     {
-        _anim.SetFloat(newParamentr, newValue);
+        _anim.SetFloat(newParamentr, newValue, 0.1f, Time.deltaTime);
     }
 
     private void CancelCurrentParametr()
     {
         _currentKeyName = "";
+        GetComponent<PlayerControl>().CanselActiveState();
     }
 }
