@@ -7,7 +7,9 @@ public class PlayerAnimationConrtol : MonoBehaviour
 
     [SerializeField] private string _currentState;
     [SerializeField] private string _currentKeyName;
+    [SerializeField] private float _timeCurrentAnimationJump;
 
+    public float TimeCurrentAnimationJump { get => _timeCurrentAnimationJump; set => _timeCurrentAnimationJump = value; }
 
     private void Start()
     {
@@ -29,6 +31,7 @@ public class PlayerAnimationConrtol : MonoBehaviour
     {
         _anim.SetBool(nameParametr, value);
         //print("Current animation length - " + _anim.GetCurrentAnimatorStateInfo(0).length);
+        TimeCurrentAnimationJump = _anim.GetCurrentAnimatorStateInfo(0).length;
         Invoke("CancelCurrentParametr", _anim.GetCurrentAnimatorStateInfo(0).length);
     }
 

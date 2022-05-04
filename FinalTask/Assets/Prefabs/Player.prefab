@@ -78,6 +78,7 @@ GameObject:
   - component: {fileID: 182509906688658599}
   - component: {fileID: 182509906688658603}
   - component: {fileID: 182509906688658602}
+  - component: {fileID: 7619273677678697267}
   - component: {fileID: 182509906688658604}
   m_Layer: 0
   m_Name: Player
@@ -264,6 +265,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _anim: {fileID: 0}
+  offsetCancelAnimation: 0
   _currentState: 
   _currentKeyName: 
 --- !u!114 &182509906688658602
@@ -294,8 +296,28 @@ MonoBehaviour:
   _jumpForce: 1
   _deltaJumpForce: 0.2
   _directionToMove: {x: 0, y: 0, z: 0}
+  _radiusGroundChecker: 0
   _isGround: 0
+  _isMoving: 0
   _gravity: {x: 0, y: 0, z: 0}
+--- !u!114 &7619273677678697267
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 182509906688658598}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e638647d0d988ca47ba60f985bd1ed46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pc: {fileID: 0}
+  _cc: {fileID: 0}
+  _jumpForce: 0
+  _jumMaxpDistance: 0
+  _jumpMaxHigh: 0
+  _isJump: 0
 --- !u!114 &182509906688658604
 MonoBehaviour:
   m_ObjectHideFlags: 0

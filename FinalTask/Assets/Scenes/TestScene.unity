@@ -1433,7 +1433,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 424187972}
-  m_LocalRotation: {x: 0.003435676, y: 5.9399535e-10, z: -6.2658055e-13, w: 0.9999941}
+  m_LocalRotation: {x: 0.003435676, y: 6.940114e-10, z: 2.3843377e-12, w: 0.9999941}
   m_LocalPosition: {x: 17.196, y: 1.5900155, z: -19.534534}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1458,7 +1458,7 @@ MonoBehaviour:
   m_IgnoreTimeScale: 0
   m_WorldUpOverride: {fileID: 0}
   m_UpdateMethod: 0
-  m_BlendUpdateMethod: 1
+  m_BlendUpdateMethod: 0
   m_DefaultBlend:
     m_Style: 1
     m_Time: 2
@@ -3616,7 +3616,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1401967930}
-  m_LocalRotation: {x: 0.0034356765, y: 3.8818126e-10, z: -1.3336732e-12, w: 0.9999941}
+  m_LocalRotation: {x: 0.0034356772, y: 1.1120877e-18, z: -3.294131e-20, w: 0.9999941}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -4317,6 +4317,7 @@ MonoBehaviour:
   distanceToGround: 0.1
   targetJump: {x: 0, y: 0, z: 0}
   doJump: 0
+  _gravityForce2: -20
   _walkSpeed: 1
   _runSpeed: 3
   _directionSide: 0
@@ -4325,6 +4326,7 @@ MonoBehaviour:
   _jumpForce: 10
   _deltaJumpForce: 0
   _directionToMove: {x: 0, y: 0, z: 0}
+  _velocityYForJump: 0
   _radiusGroundChecker: 0.25
   _isGround: 0
   _isMoving: 0
@@ -4345,6 +4347,7 @@ MonoBehaviour:
   offsetCancelAnimation: 0
   _currentState: 
   _currentKeyName: 
+  _timeCurrentAnimationJump: 0
 --- !u!114 &1657874725
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6265,6 +6268,7 @@ MonoBehaviour:
   distanceToGround: 0.1
   targetJump: {x: 0, y: 0, z: 0}
   doJump: 0
+  _gravityForce2: -20
   _walkSpeed: 1
   _runSpeed: 3
   _directionSide: 0
@@ -6273,6 +6277,7 @@ MonoBehaviour:
   _jumpForce: 10
   _deltaJumpForce: 0
   _directionToMove: {x: 0, y: 0, z: 0}
+  _velocityYForJump: 0
   _radiusGroundChecker: 0.25
   _isGround: 0
   _isMoving: 0
@@ -6293,6 +6298,7 @@ MonoBehaviour:
   offsetCancelAnimation: 0
   _currentState: 
   _currentKeyName: 
+  _timeCurrentAnimationJump: 0
 --- !u!1 &2249215749691975101
 GameObject:
   m_ObjectHideFlags: 0
@@ -6937,17 +6943,21 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 182509906688658601, guid: 24053ad9579068a45abdec2be4bd839f, type: 3}
+      propertyPath: m_MinMoveDistance
+      value: 0.01
+      objectReference: {fileID: 0}
     - target: {fileID: 182509906688658602, guid: 24053ad9579068a45abdec2be4bd839f, type: 3}
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 182509906688658602, guid: 24053ad9579068a45abdec2be4bd839f, type: 3}
       propertyPath: _jumpForce
-      value: 0.9
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 182509906688658602, guid: 24053ad9579068a45abdec2be4bd839f, type: 3}
       propertyPath: _deltaJumpForce
-      value: 0.1
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 182509906688658602, guid: 24053ad9579068a45abdec2be4bd839f, type: 3}
       propertyPath: _radiusGroundChecker
@@ -7019,6 +7029,14 @@ PrefabInstance:
       objectReference: {fileID: 2043462414}
     - target: {fileID: 6855494251223403622, guid: 24053ad9579068a45abdec2be4bd839f, type: 3}
       propertyPath: m_UpdateMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7619273677678697267, guid: 24053ad9579068a45abdec2be4bd839f, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7619273677678697267, guid: 24053ad9579068a45abdec2be4bd839f, type: 3}
+      propertyPath: _jumpForce
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8243356918203159560, guid: 24053ad9579068a45abdec2be4bd839f, type: 3}
